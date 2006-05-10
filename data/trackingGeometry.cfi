@@ -1,0 +1,8 @@
+#
+# This cfi include the modules of the four TrackingGeometry's.
+#
+
+include "Geometry/CSCGeometry/data/cscGeometry.cfi"
+include "Geometry/RPCGeometry/data/rpcGeometry.cfi"
+include "Geometry/DTGeometry/data/dtGeometry.cfi"
+include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
