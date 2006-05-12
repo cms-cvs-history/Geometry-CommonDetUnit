@@ -5,4 +5,7 @@
 include "Geometry/CSCGeometry/data/cscGeometry.cfi"
 include "Geometry/RPCGeometry/data/rpcGeometry.cfi"
 include "Geometry/DTGeometry/data/dtGeometry.cfi"
+include "Geometry/TrackerNumberingBuilder/data/trackerNumberingGeometry.cfi"
 include "Geometry/TrackerGeometryBuilder/data/trackerGeometry.cfi"
+
+include "Geometry/CommonDetUnit/data/bareGlobalTrackingGeometry.cfi"
