@@ -1,8 +1,8 @@
 /*
  * \file GlobalTrackingGeometryTest.cc
  *
- *  $Date: 2006/05/10 17:59:46 $
- *  $Revision: 1.1 $
+ *  $Date: 2006/06/07 15:41:37 $
+ *  $Revision: 1.2 $
  *  \author M. Sani
  */
 
@@ -104,19 +104,16 @@ void GlobalTrackingGeometryTest::analyzeRPC(edm::ESHandle<RPCGeometry> rpcGeomet
     }
     std::cout << "RPC detUnit: GlobalTrackingGeometry succesfully tested." << std::endl;
     
-    // FIXME
-    /*
     for(RPCGeometry::DetContainer::const_iterator itRPC = rpcGeometry->dets().begin(); 
         itRPC != rpcGeometry->dets().end(); itRPC++) {
     
         DetId detId = (*itRPC)->geographicalId();
-        
+
 	    // Check idToDet
 	    const GeomDet* gd = geo->idToDet(detId);
-	    assert(gd == (*itRPC));
+        assert(gd == (*itRPC));
     }
     std::cout << "RPC det: GlobalTrackingGeometry succesfully tested." << std::endl;
-    */
 }
 
 void GlobalTrackingGeometryTest::analyzeTracker(edm::ESHandle<TrackerGeometry> tkGeometry, 
