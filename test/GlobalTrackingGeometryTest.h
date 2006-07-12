@@ -6,8 +6,8 @@
  *
  * EDAnalyzer to test the GlobalTrackingGeometry.
  *
- *  $Date: 2006/05/10 17:59:46 $
- *  $Revision: 1.1 $
+ *  $Date: 2006/06/07 15:41:34 $
+ *  $Revision: 1.2 $
  *  \author M. Sani
  */
 
@@ -25,10 +25,10 @@ public:
     ~GlobalTrackingGeometryTest();
 
     virtual void analyze( const edm::Event&, const edm::EventSetup& );
-    void analyzeCSC(edm::ESHandle<CSCGeometry> cscGeometry, edm::ESHandle<GlobalTrackingGeometry> geo);
-    void analyzeDT(edm::ESHandle<DTGeometry> cscGeometry, edm::ESHandle<GlobalTrackingGeometry> geo);
-    void analyzeRPC(edm::ESHandle<RPCGeometry> cscGeometry, edm::ESHandle<GlobalTrackingGeometry> geo);
-    void analyzeTracker(edm::ESHandle<TrackerGeometry> tkGeometry, edm::ESHandle<GlobalTrackingGeometry> geo);
+    void analyzeCSC(const GlobalTrackingGeometry* geo, const CSCGeometry* cscGeometry);
+    void analyzeDT(const GlobalTrackingGeometry* geo, const DTGeometry* dtGeometry);
+    void analyzeRPC(const GlobalTrackingGeometry* geo, const RPCGeometry* rpcGeometry);
+    void analyzeTracker(const GlobalTrackingGeometry* geo, const TrackerGeometry* tkGeometry);
          
     const std::string& myName() { return my_name; }
 

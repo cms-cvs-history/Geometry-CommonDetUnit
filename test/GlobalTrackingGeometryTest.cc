@@ -1,8 +1,8 @@
 /*
  * \file GlobalTrackingGeometryTest.cc
  *
- *  $Date: 2006/06/07 15:41:37 $
- *  $Revision: 1.2 $
+ *  $Date: 2006/06/08 10:27:55 $
+ *  $Revision: 1.3 $
  *  \author M. Sani
  */
 
@@ -34,13 +34,12 @@
 #include <iomanip> 
 #include <vector>
 
-GlobalTrackingGeometryTest::GlobalTrackingGeometryTest( const edm::ParameterSet& iConfig )
+GlobalTrackingGeometryTest::GlobalTrackingGeometryTest( const edm::ParameterSet& iConfig)
  : my_name( "GlobalTrackingGeometryTest" ) {}
 
 GlobalTrackingGeometryTest::~GlobalTrackingGeometryTest() {}
 
-void GlobalTrackingGeometryTest::analyzeCSC(edm::ESHandle<CSCGeometry> cscGeometry, 
-    edm::ESHandle<GlobalTrackingGeometry> geo) {
+void GlobalTrackingGeometryTest::analyzeCSC(const GlobalTrackingGeometry* geo, const CSCGeometry* cscGeometry) {
 
     for(CSCGeometry::DetUnitContainer::const_iterator itCSC = cscGeometry->detUnits().begin(); 
         itCSC != cscGeometry->detUnits().end(); itCSC++) {
@@ -65,9 +64,8 @@ void GlobalTrackingGeometryTest::analyzeCSC(edm::ESHandle<CSCGeometry> cscGeomet
     std::cout << "CSC det: GlobalTrackingGeometry succesfully tested." << std::endl;
 }
 
-void GlobalTrackingGeometryTest::analyzeDT(edm::ESHandle<DTGeometry> dtGeometry, 
-    edm::ESHandle<GlobalTrackingGeometry> geo) {
-
+void GlobalTrackingGeometryTest::analyzeDT(const GlobalTrackingGeometry* geo, const DTGeometry* dtGeometry) 
+{
     for(DTGeometry::DetUnitContainer::const_iterator itDT = dtGeometry->detUnits().begin(); 
         itDT != dtGeometry->detUnits().end(); itDT++) {
         
@@ -91,7 +89,7 @@ void GlobalTrackingGeometryTest::analyzeDT(edm::ESHandle<DTGeometry> dtGeometry,
     std::cout << "DT det: GlobalTrackingGeometry succesfully tested." << std::endl;
 }
 
-void GlobalTrackingGeometryTest::analyzeRPC(edm::ESHandle<RPCGeometry> rpcGeometry, edm::ESHandle<GlobalTrackingGeometry> geo) {
+void GlobalTrackingGeometryTest::analyzeRPC(const GlobalTrackingGeometry* geo, const RPCGeometry* rpcGeometry) {
 
     for(RPCGeometry::DetUnitContainer::const_iterator itRPC = rpcGeometry->detUnits().begin(); 
         itRPC != rpcGeometry->detUnits().end(); itRPC++) {
@@ -116,8 +114,7 @@ void GlobalTrackingGeometryTest::analyzeRPC(edm::ESHandle<RPCGeometry> rpcGeomet
     std::cout << "RPC det: GlobalTrackingGeometry succesfully tested." << std::endl;
 }
 
-void GlobalTrackingGeometryTest::analyzeTracker(edm::ESHandle<TrackerGeometry> tkGeometry, 
-    edm::ESHandle<GlobalTrackingGeometry> geo) {
+void GlobalTrackingGeometryTest::analyzeTracker(const GlobalTrackingGeometry* geo, const TrackerGeometry* tkGeometry) {
 
     for(TrackerGeometry::DetUnitContainer::const_iterator itTk = tkGeometry->detUnits().begin(); 
         itTk != tkGeometry->detUnits().end(); itTk++) {
@@ -150,37 +147,49 @@ void GlobalTrackingGeometryTest::analyze( const edm::Event& iEvent, const edm::E
     iSetup.get<GlobalTrackingGeometryRecord>().get(geo);     
     
     DetId detId1(DetId::Tracker, 0);
+    const TrackerGeometry* trackerGeometry = 0;
     std::cout << "Pointer to Tracker Geometry: ";
-    std::cout << geo->slaveGeometry(detId1) << std::endl;
+    try {
+      trackerGeometry = (const TrackerGeometry*) geo->slaveGeometry(detId1);
+      std::cout << trackerGeometry << std::endl;
+    } catch (...) {
+      std::cout << "N/A" << std::endl;
+    }
     
     DetId detId2(DetId::Muon, 1); 
+    const DTGeometry* dtGeometry = 0;
     std::cout << "Pointer to DT Geometry: ";
-    std::cout << geo->slaveGeometry(detId2) << std::endl;
+    try {
+      dtGeometry = (const DTGeometry*) geo->slaveGeometry(detId2);
+      std::cout << dtGeometry << std::endl;
+    } catch (...) {
+      std::cout << "N/A" << std::endl;
+    }
  
     DetId detId3(DetId::Muon, 2); 
-    std::cout << "Pointer to CSC Geometry: ";
-    std::cout << geo->slaveGeometry(detId3) << std::endl;
+    const CSCGeometry* cscGeometry = 0;
+    std::cout << "Pointer to CSC Geometry: "; 
+    try {
+      cscGeometry = (const CSCGeometry*) geo->slaveGeometry(detId3);
+      std::cout << cscGeometry << std::endl;
+    } catch (...) {
+      std::cout << "N/A" << std::endl;
+    }
  
     DetId detId4(DetId::Muon, 3); 
+    const RPCGeometry* rpcGeometry = 0;
     std::cout << "Pointer to RPC Geometry: ";
-    std::cout << geo->slaveGeometry(detId4) << std::endl;
+    try {
+      rpcGeometry = (const RPCGeometry*) geo->slaveGeometry(detId4);
+      std::cout <<  rpcGeometry << std::endl;
+    } catch (...) {
+      std::cout << "N/A" << std::endl;
+    }
         
-    edm::ESHandle<CSCGeometry> cscGeometry;
-    iSetup.get<MuonGeometryRecord>().get(cscGeometry);
-  
-    edm::ESHandle<DTGeometry> dtGeometry;
-    iSetup.get<MuonGeometryRecord>().get(dtGeometry);
-    
-    edm::ESHandle<RPCGeometry> rpcGeometry;
-    iSetup.get<MuonGeometryRecord>().get(rpcGeometry);
-
-    edm::ESHandle<TrackerGeometry> tkGeometry;
-    iSetup.get<TrackerDigiGeometryRecord>().get(tkGeometry);
-    
-    analyzeCSC(cscGeometry, geo);
-    analyzeDT(dtGeometry, geo);
-    analyzeRPC(rpcGeometry, geo);
-    analyzeTracker(tkGeometry, geo);    
+    if (cscGeometry) analyzeCSC(geo.product(), cscGeometry);
+    if (dtGeometry) analyzeDT(geo.product(), dtGeometry);
+    if (rpcGeometry) analyzeRPC(geo.product(), rpcGeometry);
+    if (trackerGeometry) analyzeTracker(geo.product(), trackerGeometry);    
 }
 
 //define this as a plug-in
