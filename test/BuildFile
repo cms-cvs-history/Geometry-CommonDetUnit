@@ -3,5 +3,3 @@
   <use name=DataFormats/DetId>
   <use name=boost>
 </bin>
-
-<use name=Geometry/CommonDetUnit>
